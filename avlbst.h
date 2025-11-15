@@ -136,10 +136,56 @@ public:
 protected:
     virtual void nodeSwap( AVLNode<Key,Value>* n1, AVLNode<Key,Value>* n2);
 
-    // Add helper functions here
-
+    void left_rotate(AVLNode<Key,Value>* node);
+    void right_rotate(AVLNode<Key,Value>* node);
+    void insert_AVL(AVLNode<Key,Value>* node);
+    void remove_AVL(AVLNode<Key,Value>* node, int n);
 
 };
+
+template<class Key, class Value>
+void AVLTree<Key, Value>::left_rotate(AVLNode<Key,Value>* node){
+  AVLNode<Key,Value>* right = node->getRight();
+  node->setRight(right->getLeft());
+  if(right->getLeft() != nullptr){
+    right->getLeft()->setParent(node);
+  }
+  right->setParent(node->getParent());
+
+  if(node->getParent() == nullptr){
+    this->root_ = right;
+  }
+  else if(node->getParent()->getLeft() == node){
+    node->getParent()->setLeft(right);
+  }
+  else{
+    node->getParent()->setRight(right);
+  }
+  right->setLeft(node);
+  node->setParent(right);
+}
+
+template<class Key, class Value>
+void AVLTree<Key, Value>::right_rotate(AVLNode<Key,Value>* node){
+  AVLNode<Key,Value>* left = node->getLeft();
+  node->setLeft(left->getRight());
+  if(left->getRight() != nullptr){
+    left->getRight()->setParent(node);
+  }
+  left->setParent(node->getParent());
+
+  if(node->getParent() == nullptr){
+    this->root_ = left;
+  }
+  else if(node->getParent()->getLeft() == node){
+    node->getParent()->setLeft(left);
+  }
+  else{
+    node->getParent()->setRight(left);
+  }
+  left->setRight(node);
+  node->setParent(left);
+}
 
 /*
  * Recall: If key is already in the tree, you should 
